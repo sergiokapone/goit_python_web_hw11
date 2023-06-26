@@ -1,0 +1,19 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+fastapi = "*"
+sqlalchemy = "*"
+databases = {extras = ["postgresql"], version = "*"}
+psycopg2 = "*"
+alembic = "*"
+uvicorn = "*"
+pydantic = {extras = ["email"], version = "*"}
+faker = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.10"
