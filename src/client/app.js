@@ -19,9 +19,11 @@ function loadContacts() {
           <td>${contact.Contact.birthday}</td>
           <td>${contact.Contact.phone_number}</td>
           <td>${contact.Contact.additional_data ?? ""}</td>
+          <td><button onclick="deleteContact(${contact.Contact.id})">Delete</button></td>
         `;
         tableBody.appendChild(row);
       });
+      
     })
     .catch(error => {
       console.error('Failed to load contacts:', error);
@@ -78,7 +80,7 @@ async function deleteContact(contactId) {
     });
 
     if (response.ok) {
-
+      console.log('Contact deleted');
       loadContacts();
     } else {
       throw new Error('Failed to delete contact');
@@ -87,6 +89,7 @@ async function deleteContact(contactId) {
     console.error(error);
   }
 }
+
 
 // Функція для редагування контакту
 async function editContact(contactId) {
