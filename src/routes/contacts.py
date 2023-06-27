@@ -16,25 +16,27 @@ router = APIRouter(prefix="/contacts", tags=["Contacts"])
 async def create_contact(
     contact: ContactCreate, session: AsyncSession = Depends(get_session)
 ):
-    new_contact = Contact(
-        first_name=contact.first_name,
-        last_name=contact.last_name,
-        email=contact.email,
-        phone_number=contact.phone_number,
-        birthday=datetime.strptime(contact.birthday, "%d.%m.%Y").date(),
-        additional_data=contact.additional_data,
-    )
-    session.add(new_contact)
-    await session.commit()
-    await session.refresh(new_contact)
-    return new_contact
+    async with session.begin():
+        new_contact = Contact(
+            first_name=contact.first_name,
+            last_name=contact.last_name,
+            email=contact.email,
+            phone_number=contact.phone_number,
+            birthday=datetime.strptime(contact.birthday, "%d.%m.%Y").date(),
+            additional_data=contact.additional_data,
+        )
+        session.add(new_contact)
+        await session.flush()  # Сохраняем изменения в базе данных
+        await session.refresh(new_contact)
+        return new_contact
 
 
 # Отримати всі контакти
 @router.get("/")
 async def get_all_contacts(session: AsyncSession = Depends(get_session)):
-    result = await session.execute(select(Contact))
-    contacts = result.all()
+    async with session.begin():
+        result = await session.execute(select(Contact))
+        contacts = result.all()
     return contacts
 
 
@@ -47,38 +49,40 @@ async def get_contact(contact_id: int, session: AsyncSession = Depends(get_sessi
     return result
 
 
+# Зміна контакту
 @router.put("/{contact_id}")
 async def update_contact(
     contact_id: int,
     contact: ContactCreate,
     session: AsyncSession = Depends(get_session),
 ):
-    db_contact = await session.execute(select(Contact).filter(Contact.id == contact_id))
-    result = db_contact.scalar_one_or_none()
-    if not result:
-        raise HTTPException(status_code=404, detail="Contact not found")
-    result.first_name = contact.first_name
-    result.last_name = contact.last_name
-    result.email = contact.email
-    result.phone_number = contact.phone_number
-    result.birthday = contact.birthday
-    result.additional_data = contact.additional_data
+    async with session.begin():
+        existing_contact = await session.get(Contact, contact_id)
+        if not existing_contact:
+            raise HTTPException(status_code=404, detail="Contact not found")
+        existing_contact.first_name = contact.first_name
+        existing_contact.last_name = contact.last_name
+        existing_contact.email = contact.email
+        existing_contact.phone_number = contact.phone_number
+        existing_contact.birthday = datetime.strptime(
+            contact.birthday, "%d.%m.%Y"
+        ).date()
+        existing_contact.additional_data = contact.additional_data
+
     await session.commit()
-    await session.refresh(result)
-    return result
+    await session.refresh(existing_contact)
+    return existing_contact
 
 
 # Видалення контакту
 @router.delete("/{contact_id}")
 async def delete_contact(contact_id: int, session: AsyncSession = Depends(get_session)):
-    contact = await session.execute(
-        select(Contact).filter(Contact.id == contact_id)
-    ).first()
+    contact = await session.get(Contact, contact_id)
     if not contact:
         raise HTTPException(status_code=404, detail="Contact not found")
     await session.delete(contact)
     await session.commit()
-    return {"message": "Contact deleted"}
+    return {"message": "Contact deleted", "contact": contact}
 
 
 # Пошук контакту
