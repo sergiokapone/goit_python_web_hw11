@@ -1,8 +1,10 @@
-from datetime import datetime
-from fastapi import APIRouter, HTTPException
+from datetime import datetime, date, timedelta
 
+from sqlalchemy.orm import Session
 
-from src.database.connect import SessionLocal
+from fastapi import APIRouter, Depends, HTTPException, Query
+
+from src.database.connect import SessionLocal, get_db
 from src.schemas import ContactCreate
 from src.database.models import Contact
 
@@ -72,3 +74,50 @@ def delete_contact(contact_id: int):
     db.delete(contact)
     db.commit()
     return {"message": "Contact deleted"}
+
+
+# Пошук контакту
+@router.get("/search/")
+async def search_contacts(query: str = Query(...), db: Session = Depends(get_db)):
+    contacts = (
+        db.query(Contact)
+        .filter(
+            Contact.first_name.ilike(f"%{query}%")
+            | Contact.last_name.ilike(f"%{query}%")
+            | Contact.email.ilike(f"%{query}%")
+        )
+        .all()
+    )
+    return contacts
+
+
+def is_upcoming_birthday(birthday: date, start_date: date, end_date: date) -> bool:
+    birthday_this_year = start_date.replace(
+        year=start_date.year, month=birthday.month, day=birthday.day
+    )
+
+    if start_date <= birthday_this_year <= end_date:
+        return True
+
+    birthday_next_year = birthday_this_year.replace(year=start_date.year + 1)
+
+    if start_date <= birthday_next_year <= end_date:
+        return True
+
+    return False
+
+
+@router.get("/birthdays/")
+async def get_upcoming_birthdays(
+    start_date: date = date.today(), end_date: date = date.today() + timedelta(days=7)
+):
+    db = SessionLocal()
+    contacts = db.query(Contact).all()
+
+    upcoming_birthdays = [
+        contact
+        for contact in contacts
+        if is_upcoming_birthday(contact.birthday, start_date, end_date)
+    ]
+
+    return upcoming_birthdays
