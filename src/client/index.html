@@ -11,36 +11,50 @@
   <div class="container">
     <h1>Contact Management</h1>
 
-<!-- Форма для створення нового контакту -->
-<h2>Create Contact</h2>
-<form id="createContactForm">
-  <div class="mb-3">
-    <label for="firstNameInput" class="form-label">First Name</label>
-    <input type="text" class="form-control" id="firstNameInput" required>
-  </div>
-  <div class="mb-3">
-    <label for="lastNameInput" class="form-label">Last Name</label>
-    <input type="text" class="form-control" id="lastNameInput" required>
-  </div>
-  <div class="mb-3">
-    <label for="emailInput" class="form-label">Email</label>
-    <input type="email" class="form-control" id="emailInput" required>
-  </div>
-  <div class="mb-3">
-    <label for="phoneNumberInput" class="form-label">Phone Number</label>
-    <input type="tel" class="form-control" id="phoneNumberInput" required>
-  </div>
-  <div class="mb-3">
-    <label for="birthdayInput" class="form-label">Birthday</label>
-    <input type="date" class="form-control" id="birthdayInput" required>
-  </div>
-  <div class="mb-3">
-    <label for="additionalDataInput" class="form-label">Additional Data</label>
-    <textarea class="form-control" id="additionalDataInput"></textarea>
-  </div>
-  <button type="submit" class="btn btn-primary">Create</button>
-</form>
+    <!-- Форма для створення нового контакту -->
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createContactModal">
+      Create Contact
+    </button>
 
+    <div class="modal fade" id="createContactModal" tabindex="-1" aria-labelledby="createContactModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="createContactModalLabel">Create Contact</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form id="createContactForm">
+              <div class="mb-3">
+                <label for="firstNameInput" class="form-label">First Name</label>
+                <input type="text" class="form-control" id="firstNameInput" required>
+              </div>
+              <div class="mb-3">
+                <label for="lastNameInput" class="form-label">Last Name</label>
+                <input type="text" class="form-control" id="lastNameInput" required>
+              </div>
+              <div class="mb-3">
+                <label for="emailInput" class="form-label">Email</label>
+                <input type="email" class="form-control" id="emailInput" required>
+              </div>
+              <div class="mb-3">
+                <label for="phoneNumberInput" class="form-label">Phone Number</label>
+                <input type="tel" class="form-control" id="phoneNumberInput" required>
+              </div>
+              <div class="mb-3">
+                <label for="birthdayInput" class="form-label">Birthday</label>
+                <input type="date" class="form-control" id="birthdayInput" required>
+              </div>
+              <div class="mb-3">
+                <label for="additionalDataInput" class="form-label">Additional Data</label>
+                <textarea class="form-control" id="additionalDataInput"></textarea>
+              </div>
+              <button type="submit" class="btn btn-primary">Create</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <!-- Таблиця для відображення контактів -->
     <h2>Contact List</h2>

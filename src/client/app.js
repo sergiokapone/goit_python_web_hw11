@@ -56,6 +56,7 @@ async function createContact(event) {
 
   
     createContactForm.reset();
+    createContactModal.hide();
 
 
     // Завантаження оновленого списку контактів
@@ -67,6 +68,7 @@ async function createContact(event) {
 
 const createContactForm = document.getElementById('createContactForm');
 createContactForm.addEventListener('submit', createContact);
+const createContactModal = new bootstrap.Modal(document.getElementById('createContactModal'));
 
 
 
