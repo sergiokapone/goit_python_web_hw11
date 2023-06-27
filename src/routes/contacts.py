@@ -22,7 +22,7 @@ async def create_contact(
             last_name=contact.last_name,
             email=contact.email,
             phone_number=contact.phone_number,
-            birthday=datetime.strptime(contact.birthday, "%d.%m.%Y").date(),
+            birthday=datetime.strptime(contact.birthday, "%Y-%m-%d").date(),
             additional_data=contact.additional_data,
         )
         session.add(new_contact)
@@ -65,7 +65,7 @@ async def update_contact(
         existing_contact.email = contact.email
         existing_contact.phone_number = contact.phone_number
         existing_contact.birthday = datetime.strptime(
-            contact.birthday, "%d.%m.%Y"
+            contact.birthday, "%Y-%m-%d"
         ).date()
         existing_contact.additional_data = contact.additional_data
 

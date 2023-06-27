@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+  <title>Contact Management</title>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body>
+  <div class="container">
+    <h1>Contact Management</h1>
+
+<!-- Form for creating a new contact -->
+<h2>Create Contact</h2>
+<form id="createContactForm">
+  <div class="mb-3">
+    <label for="firstNameInput" class="form-label">First Name</label>
+    <input type="text" class="form-control" id="firstNameInput" required>
+  </div>
+  <div class="mb-3">
+    <label for="lastNameInput" class="form-label">Last Name</label>
+    <input type="text" class="form-control" id="lastNameInput" required>
+  </div>
+  <div class="mb-3">
+    <label for="emailInput" class="form-label">Email</label>
+    <input type="email" class="form-control" id="emailInput" required>
+  </div>
+  <div class="mb-3">
+    <label for="phoneNumberInput" class="form-label">Phone Number</label>
+    <input type="tel" class="form-control" id="phoneNumberInput" required>
+  </div>
+  <div class="mb-3">
+    <label for="birthdayInput" class="form-label">Birthday</label>
+    <input type="date" class="form-control" id="birthdayInput" required>
+  </div>
+  <div class="mb-3">
+    <label for="additionalDataInput" class="form-label">Additional Data</label>
+    <textarea class="form-control" id="additionalDataInput"></textarea>
+  </div>
+  <button type="submit" class="btn btn-primary">Create</button>
+</form>
+
+
+    <!-- Таблица для отображения контактов -->
+    <h2>Contact List</h2>
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">ID</th>
+          <th scope="col">First Name</th>
+          <th scope="col">Last Name</th>
+          <th scope="col">Email</th>
+          <!-- Добавьте другие заголовки столбцов -->
+        </tr>
+      </thead>
+      <tbody id="contactTableBody"></tbody>
+    </table>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

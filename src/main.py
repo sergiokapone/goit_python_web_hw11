@@ -1,11 +1,22 @@
 from fastapi import Depends, FastAPI, HTTPException, status
+from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import text
 from sqlalchemy.ext.asyncio import AsyncSession
+
 from src.database.connect import get_session
 
 from src.routes import contacts
 
 app = FastAPI()
+
+# Настройка CORS
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://127.0.0.1:5500"],  # Разрешенный источник
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 app.include_router(contacts.router)
 

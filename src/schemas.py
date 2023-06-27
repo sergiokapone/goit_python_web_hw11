@@ -13,9 +13,9 @@ class ContactBase(BaseModel):
     @validator("birthday")
     def validate_birthday(cls, value):
         try:
-            datetime.strptime(value, "%d.%m.%Y")
+            datetime.strptime(value, "%Y-%m-%d")
         except ValueError:
-            raise ValueError("Invalid date format. Expected format: DD.MM.YYYY")
+            raise ValueError("Invalid date format. Expected format: YYYY.MM.DD")
         return value
 
 
