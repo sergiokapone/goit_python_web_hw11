@@ -68,6 +68,8 @@ uvicorn src.main:app --host localhost --port 8000 --reload
 
 ## Використанні API
 
+Дані зберігаються у хмарній базі даних [ElephantSQL](https://www.elephantsql.com/).
+
 API додатку надає можливість виконувати наступні операції з контактами:
 
 ### Отримання списку контактів
