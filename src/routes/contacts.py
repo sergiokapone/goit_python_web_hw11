@@ -1,10 +1,11 @@
-from datetime import datetime, date, timedelta
+from datetime import date, datetime, timedelta
+from sqlalchemy import or_, select
 
-from sqlalchemy.orm import Session
+from sqlalchemy.ext.asyncio import AsyncSession
+from src.database.connect import get_session
 
 from fastapi import APIRouter, Depends, HTTPException, Query
 
-from src.database.connect import SessionLocal, get_db
 from src.schemas import ContactCreate
 from src.database.models import Contact
 
@@ -12,8 +13,9 @@ router = APIRouter(prefix="/contacts", tags=["Contacts"])
 
 
 @router.post("/")
-def create_contact(contact: ContactCreate):
-    db = SessionLocal()
+async def create_contact(
+    contact: ContactCreate, session: AsyncSession = Depends(get_session)
+):
     new_contact = Contact(
         first_name=contact.first_name,
         last_name=contact.last_name,
@@ -22,70 +24,82 @@ def create_contact(contact: ContactCreate):
         birthday=datetime.strptime(contact.birthday, "%d.%m.%Y").date(),
         additional_data=contact.additional_data,
     )
-    db.add(new_contact)
-    db.commit()
-    db.refresh(new_contact)
+    session.add(new_contact)
+    await session.commit()
+    await session.refresh(new_contact)
     return new_contact
 
 
-# Отримання списку всіх контактів
+# Отримати всі контакти
 @router.get("/")
-def get_all_contacts():
-    db = SessionLocal()
-    contacts = db.query(Contact).all()
+async def get_all_contacts(session: AsyncSession = Depends(get_session)):
+    result = await session.execute(select(Contact))
+    contacts = result.all()
     return contacts
 
 
-# Отримання одного контакту за ідентифікатором
 @router.get("/{contact_id}")
-def get_contact(contact_id: int):
-    db = SessionLocal()
-    contact = db.query(Contact).filter(Contact.id == contact_id).first()
-    if not contact:
+async def get_contact(contact_id: int, session: AsyncSession = Depends(get_session)):
+    contact = await session.execute(select(Contact).filter(Contact.id == contact_id))
+    result = contact.scalar_one_or_none()
+    if result is None:
         raise HTTPException(status_code=404, detail="Contact not found")
-    return contact
+    return result
 
 
-# Оновлення існуючого контакту
 @router.put("/{contact_id}")
-def update_contact(contact_id: int, contact: ContactCreate):
-    db = SessionLocal()
-    db_contact = db.query(Contact).filter(Contact.id == contact_id).first()
-    if not db_contact:
+async def update_contact(
+    contact_id: int,
+    contact: ContactCreate,
+    session: AsyncSession = Depends(get_session),
+):
+    db_contact = await session.execute(select(Contact).filter(Contact.id == contact_id))
+    result = db_contact.scalar_one_or_none()
+    if not result:
         raise HTTPException(status_code=404, detail="Contact not found")
-    db_contact.first_name = contact.first_name
-    db_contact.last_name = contact.last_name
-    db_contact.email = contact.email
-    db_contact.phone_number = contact.phone_number
-    db_contact.birthday = contact.birthday
-    db_contact.additional_data = contact.additional_data
-    db.commit()
-    db.refresh(db_contact)
-    return db_contact
+    result.first_name = contact.first_name
+    result.last_name = contact.last_name
+    result.email = contact.email
+    result.phone_number = contact.phone_number
+    result.birthday = contact.birthday
+    result.additional_data = contact.additional_data
+    await session.commit()
+    await session.refresh(result)
+    return result
 
 
 # Видалення контакту
 @router.delete("/{contact_id}")
-def delete_contact(contact_id: int):
-    db = SessionLocal()
-    contact = db.query(Contact).filter(Contact.id == contact_id).first()
+async def delete_contact(contact_id: int, session: AsyncSession = Depends(get_session)):
+    contact = await session.execute(
+        select(Contact).filter(Contact.id == contact_id)
+    ).first()
     if not contact:
         raise HTTPException(status_code=404, detail="Contact not found")
-    db.delete(contact)
-    db.commit()
+    await session.delete(contact)
+    await session.commit()
     return {"message": "Contact deleted"}
 
 
 # Пошук контакту
 @router.get("/search/")
-async def search_contacts(query: str = Query(...), db: Session = Depends(get_db)):
+async def search_contacts(
+    query: str = Query(...), session: AsyncSession = Depends(get_session)
+):
     contacts = (
-        db.query(Contact)
-        .filter(
-            Contact.first_name.ilike(f"%{query}%")
-            | Contact.last_name.ilike(f"%{query}%")
-            | Contact.email.ilike(f"%{query}%")
+        (
+            await session.execute(
+                select(Contact).filter(
+                    or_(
+                        Contact.first_name.ilike(f"%{query}%"),
+                        Contact.last_name.ilike(f"%{query}%"),
+                        Contact.email.ilike(f"%{query}%"),
+                        Contact.phone_number.ilike(f"%{query}%"),
+                    )
+                )
+            )
         )
+        .scalars()
         .all()
     )
     return contacts
@@ -109,10 +123,13 @@ def is_upcoming_birthday(birthday: date, start_date: date, end_date: date) -> bo
 
 @router.get("/birthdays/")
 async def get_upcoming_birthdays(
-    start_date: date = date.today(), end_date: date = date.today() + timedelta(days=7)
+    end_date: date = date.today() + timedelta(days=7),
+    start_date: date = date.today(),
+    session: AsyncSession = Depends(get_session),
 ):
-    db = SessionLocal()
-    contacts = db.query(Contact).all()
+    async with session.begin():
+        result = await session.execute(select(Contact).order_by(Contact.birthday))
+        contacts = result.scalars().all()
 
     upcoming_birthdays = [
         contact
