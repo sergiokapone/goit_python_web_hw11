@@ -135,4 +135,4 @@ API додатку надає можливість виконувати наст
 
 Додатково був розроблений клієнт на `js` для взаємодії з REST API. Він надає зручний спосіб відображення та керування контактами.
 
-Клієнт доступний за адресою `https://sergiokapone.github.io/goit_python_web_hw11`
+Клієнт доступний за адресою [https://sergiokapone.github.io/goit_python_web_hw11](https://sergiokapone.github.io/goit_python_web_hw11)
