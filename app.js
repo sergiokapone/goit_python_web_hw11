@@ -1,6 +1,7 @@
 // Функція для завантаження контактів і оновлення таблиці
+const BASE_URL = "https://fastapi11-z9nc.onrender.com/"
 function loadContacts() {
-  axios.get('http://localhost:8000/contacts/')
+  axios.get(`${BASE_URL}/contacts/`)
     .then(response => {
       const contacts = response.data;
       // Очищення таблиці
@@ -51,7 +52,7 @@ async function createContact(event) {
   };
 
   try {
-    const response = await axios.post('http://localhost:8000/contacts/', newContact);
+    const response = await axios.post(`${BASE_URL}/contacts/`, newContact);
     console.log(response);
 
     createContactForm.reset();
@@ -75,7 +76,7 @@ const updateContactModal = new bootstrap.Modal(document.getElementById('updateCo
 // Функція для видалення контакту
 async function deleteContact(contactId) {
   try {
-    const response = await fetch(`http://localhost:8000/contacts/${contactId}`, {
+    const response = await fetch(`${BASE_URL}/contacts/${contactId}`, {
       method: 'DELETE',
     });
 
@@ -93,7 +94,7 @@ async function deleteContact(contactId) {
 // Функція для редагування контакту
 async function updateContact(contactId) {
   try {
-    const response = await axios.get(`http://localhost:8000/contacts/${contactId}`);
+    const response = await axios.get(`${BASE_URL}/contacts/${contactId}`);
     const contact = response.data;
 
     const firstNameInput = document.getElementById('updateFirstNameInput');
@@ -123,7 +124,7 @@ async function updateContact(contactId) {
       };
 
       try {
-        const response = await axios.put(`http://localhost:8000/contacts/${contactId}`, updatedContact);
+        const response = await axios.put(`${BASE_URL}/contacts/${contactId}`, updatedContact);
         console.log(response);
 
         updateContactForm.reset();
