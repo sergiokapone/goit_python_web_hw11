@@ -15,7 +15,7 @@ class ContactBase(BaseModel):
         try:
             datetime.strptime(value, "%Y-%m-%d")
         except ValueError:
-            raise ValueError("Invalid date format. Expected format: YYYY.MM.DD")
+            raise ValueError("Invalid date format. Expected format: YYYY-MM-DD")
         return value
 
 
