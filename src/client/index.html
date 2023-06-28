@@ -6,12 +6,17 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
   <title>Contact Management</title>
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <style>
+    body {
+      padding: 20px;
+    }
+  </style>
 </head>
 <body>
   <div class="container">
     <h1>Contact Management</h1>
 
-    <!-- Форма для створення нового контакту -->
+    <!-- Модалка для створення нового контакту -->
     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createContactModal">
       Create Contact
     </button>
@@ -56,6 +61,47 @@
       </div>
     </div>
 
+    <!-- Модалка для оновлення контакту -->
+    <div class="modal fade" id="updateContactModal" tabindex="-1" aria-labelledby="updateContactModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="updateContactModalLabel">Update Contact</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form id="updateContactForm">
+              <div class="mb-3">
+                <label for="updateFirstNameInput" class="form-label">First Name</label>
+                <input type="text" class="form-control" id="updateFirstNameInput" required>
+              </div>
+              <div class="mb-3">
+                <label for="updateLastNameInput" class="form-label">Last Name</label>
+                <input type="text" class="form-control" id="updateLastNameInput" required>
+              </div>
+              <div class="mb-3">
+                <label for="updateEmailInput" class="form-label">Email</label>
+                <input type="email" class="form-control" id="updateEmailInput" required>
+              </div>
+              <div class="mb-3">
+                <label for="updatePhoneNumberInput" class="form-label">Phone Number</label>
+                <input type="tel" class="form-control" id="updatePhoneNumberInput" required>
+              </div>
+              <div class="mb-3">
+                <label for="updateBirthdayInput" class="form-label">Birthday</label>
+                <input type="date" class="form-control" id="updateBirthdayInput" required>
+              </div>
+              <div class="mb-3">
+                <label for="updateAdditionalDataInput" class="form-label">Additional Data</label>
+                <textarea class="form-control" id="updateAdditionalDataInput"></textarea>
+              </div>
+              <button type="submit" class="btn btn-primary">Update</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- Таблиця для відображення контактів -->
     <h2>Contact List</h2>
     <table class="table">
@@ -68,6 +114,7 @@
           <th scope="col">Birthday</th>
           <th scope="col">Phone</th>
           <th scope="col">Additional Info</th>
+          <th scope="col">Actions</th>
         </tr>
       </thead>
       <tbody id="contactTableBody"></tbody>
