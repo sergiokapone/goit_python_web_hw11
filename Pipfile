@@ -5,14 +5,15 @@ name = "pypi"
 
 [packages]
 fastapi = "*"
-databases = {extras = ["postgresql"], version = "*"}
+databases = "*"
 psycopg2 = "*"
 alembic = "*"
 uvicorn = "*"
 pydantic = {extras = ["email"], version = "*"}
 faker = "*"
 aiopg = "*"
-sqlalchemy = {extras = ["asyncio"], version = "*"}
+sqlalchemy = "*"
+asyncpg = "*"
 
 [dev-packages]
 

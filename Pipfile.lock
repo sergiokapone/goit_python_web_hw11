@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "7ae19984d81919ef062d0386fa216ecd1ce5cfc62c603095059c1613b21421a3"
+            "sha256": "bd71e047aa8438f8991bca61a0ba0560b53ccd8fcea855368d7ce7d2ebb74a7c"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -87,6 +87,7 @@
                 "sha256:fca608d199ffed4903dce1bcd97ad0fe8260f405c1c225bdf0002709132171c2",
                 "sha256:fddcacf695581a8d856654bc4c8cfb73d5c9df26d5f55201722d3e6a699e9629"
             ],
+            "index": "pypi",
             "version": "==0.27.0"
         },
         "click": {
@@ -106,9 +107,7 @@
             "version": "==0.4.6"
         },
         "databases": {
-            "extras": [
-                "postgresql"
-            ],
+            "extras": [],
             "hashes": [
                 "sha256:cf5da4b8a3e3cd038c459529725ebb64931cbbb7a091102664f20ef8f6cefd0d",
                 "sha256:ea2d419d3d2eb80595b7ceb8f282056f080af62efe2fb9bcd83562f93ec4b674"
