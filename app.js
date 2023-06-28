@@ -1,5 +1,6 @@
+const BASE_URL = "https://fastapi11-z9nc.onrender.com"
+
 // Функція для завантаження контактів і оновлення таблиці
-const BASE_URL = "https://fastapi11-z9nc.onrender.com/"
 function loadContacts() {
   axios.get(`${BASE_URL}/contacts/`)
     .then(response => {
